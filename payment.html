@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Secure Payment | D & D Tours</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+font-family:Inter,sans-serif;
+scroll-behavior:smooth;
+}
+
+body{
+background:#050505;
+overflow-x:hidden;
+color:white;
+}
+
+body::before{
+content:'';
+position:fixed;
+width:900px;
+height:900px;
+background:radial-gradient(circle,#222 0%,transparent 70%);
+top:-350px;
+right:-300px;
+opacity:.45;
+animation:float1 15s infinite alternate;
+z-index:-2;
+}
+
+body::after{
+content:'';
+position:fixed;
+width:700px;
+height:700px;
+background:radial-gradient(circle,#111 0%,transparent 70%);
+bottom:-250px;
+left:-250px;
+animation:float2 18s infinite alternate;
+z-index:-2;
+}
+
+@keyframes float1{
+
+0%{transform:translateY(0px);}
+100%{transform:translateY(120px);}
+}
+
+@keyframes float2{
+
+0%{transform:translateX(0px);}
+100%{transform:translateX(160px);}
+}
+
+.glass{
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(20px);
+
+border:1px solid rgba(255,255,255,.08);
+
+box-shadow:0 15px 50px rgba(0,0,0,.45);
+
+}
+
+.input{
+
+width:100%;
+
+padding:15px;
+
+border-radius:14px;
+
+background:#111;
+
+border:1px solid #222;
+
+outline:none;
+
+transition:.3s;
+
+}
+
+.input:focus{
+
+border-color:white;
+
+}
+
+.card{
+
+transition:.4s;
+
+}
+
+.card:hover{
+
+transform:translateY(-8px);
+
+}
+
+.fade{
+
+animation:fade .9s;
+
+}
+
+@keyframes fade{
+
+from{
+
+opacity:0;
+
+transform:translateY(40px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:none;
+
+}
+
+}
+
+.progress{
+
+height:8px;
+
+background:#222;
+
+border-radius:20px;
+
+overflow:hidden;
+
+}
+
+.progress div{
+
+height:100%;
+
+width:33%;
+
+background:white;
+
+border-radius:20px;
+
+transition:.4s;
+
+}
+
+.selectCard{
+
+cursor:pointer;
+
+transition:.35s;
+
+border:2px solid #222;
+
+}
+
+.selectCard:hover{
+
+border-color:white;
+
+transform:translateY(-5px);
+
+}
+
+.activeCard{
+
+border-color:white;
+
+background:white;
+
+color:black;
+
+}
+
+.heroTitle{
+
+background:linear-gradient(to right,#fff,#777);
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<section class="min-h-screen flex items-center justify-center px-6">
+
+<div class="max-w-6xl w-full">
+
+<div class="text-center mb-16 fade">
+
+<p class="uppercase tracking-[7px] text-gray-400 text-sm">
+
+SECURE TOUR PAYMENT
+
+</p>
+
+<h1 class="heroTitle text-6xl md:text-7xl font-black mt-4">
+
+Complete Your Booking
+
+</h1>
+
+<p class="text-gray-400 max-w-2xl mx-auto mt-8 text-lg leading-8">
+
+Pay securely using Bank Transfer or Wise.
+
+Choose to pay either your required
+
+<strong>50% Advance Deposit</strong>
+
+or the
+
+<strong>Full Tour Amount.</strong>
+
+</p>
+
+</div>
+
+<div class="glass rounded-3xl p-10 fade">
+
+<div class="grid lg:grid-cols-2 gap-12">
+
+<div>
+
+<h2 class="text-3xl font-bold mb-8">
+
+Booking Lookup
+
+</h2>
+
+<div class="space-y-6">
+
+<input
+type="text"
+placeholder="Booking ID"
+class="input"
+id="bookingID">
+
+<input
+type="email"
+placeholder="Email Address"
+class="input"
+id="bookingEmail">
+
+<button
+id="lookupBtn"
+class="w-full bg-white text-black py-4 rounded-xl font-semibold hover:scale-[1.02] transition">
+
+Find My Booking
+
+</button>
+
+</div>
+
+</div>
+
+<div>
+
+<div
+id="tourCard"
+class="glass rounded-2xl p-8 hidden">
+
+<div class="flex justify-between items-start">
+
+<div>
+
+<p class="text-gray-400">
+
+Booking
+
+</p>
+
+<h2
+id="tourName"
+class="text-3xl font-bold mt-2">
+
+Amazing Sri Lanka
+
+</h2>
+
+</div>
+
+<div>
+
+<span
+class="bg-white text-black px-4 py-2 rounded-full text-sm">
+
+Confirmed
+
+</span>
+
+</div>
+
+</div>
+
+<div class="grid grid-cols-2 gap-5 mt-10">
+
+<div>
+
+<p class="text-gray-400">
+
+Guest
+
+</p>
+
+<p
+id="guestName"
+class="font-semibold mt-2">
+
+John Smith
+
+</p>
+
+</div>
+
+<div>
+
+<p class="text-gray-400">
+
+Duration
+
+</p>
+
+<p
+id="tourDays"
+class="font-semibold mt-2">
+
+7 Days
+
+</p>
+
+</div>
+
+<div>
+
+<p class="text-gray-400">
+
+Tour Date
+
+</p>
+
+<p
+id="tourDate"
+class="font-semibold mt-2">
+
+12 Aug 2026
+
+</p>
+
+</div>
+
+<div>
+
+<p class="text-gray-400">
+
+Guests
+
+</p>
+
+<p
+id="guestCount"
+class="font-semibold mt-2">
+
+2 Adults
+
+</p>
+
+</div>
+
+</div>
+
+<div class="mt-10">
+
+<p class="text-gray-400 mb-3">
+
+Payment Progress
+
+</p>
+
+<div class="progress">
+
+<div></div>
+
+</div>
+
+<div class="flex justify-between text-sm mt-3 text-gray-400">
+
+<span>Deposit</span>
+
+<span>Balance</span>
+
+<span>Completed</span>
+
+</div>
+
+</div>
+
+<div class="mt-10">
+
+<p class="text-gray-400 mb-5">
+
+Choose Payment
+
+</p>
+
+<div class="grid md:grid-cols-2 gap-5">
+
+<div
+class="selectCard rounded-xl p-6 activeCard"
+id="deposit">
+
+<p class="uppercase text-xs">
+
+50% Deposit
+
+</p>
+
+<h3 class="text-4xl font-bold mt-3">
+
+$750
+
+</h3>
+
+<p class="mt-4 text-sm opacity-80">
+
+Required to confirm the booking.
+
+</p>
+
+</div>
+
+<div
+class="selectCard rounded-xl p-6"
+id="full">
+
+<p class="uppercase text-xs">
+
+Full Payment
+
+</p>
+
+<h3 class="text-4xl font-bold mt-3">
+
+$1500
+
+</h3>
+
+<p class="mt-4 text-sm opacity-80">
+
+Pay everything today.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="mt-10">
+
+<button
+class="w-full bg-white text-black rounded-xl py-4 font-semibold">
+
+Continue to Payment →
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= PAYMENT METHODS ================= -->
+
+<section class="max-w-7xl mx-auto px-6 pb-24">
+
+<div class="text-center mb-16">
+
+<p class="uppercase tracking-[6px] text-gray-500 text-sm">
+PAYMENT OPTIONS
+</p>
+
+<h2 class="text-5xl font-black mt-4">
+Choose Your Preferred Method
+</h2>
+
+<p class="text-gray-400 mt-5 max-w-2xl mx-auto">
+We currently accept international bank transfers and Wise payments.
+After completing your payment simply upload your receipt below.
+</p>
+
+</div>
+
+
+<div class="grid lg:grid-cols-2 gap-10">
+
+<!-- BANK -->
+
+<div class="glass rounded-3xl p-8 card">
+
+<div class="flex items-center justify-between">
+
+<div>
+
+<h2 class="text-3xl font-bold">
+🏦 Bank Transfer
+</h2>
+
+<p class="text-gray-400 mt-2">
+Direct International Transfer
+</p>
+
+</div>
+
+<div class="text-5xl">
+🏛️
+</div>
+
+</div>
+
+
+<div class="mt-10 space-y-6">
+
+<div>
+
+<p class="text-gray-500 text-sm">
+Account Name
+</p>
+
+<div class="flex justify-between items-center mt-2">
+
+<span id="accName">
+D & D TOURS
+</span>
+
+<button onclick="copy('accName')" class="text-sm bg-white text-black px-3 py-2 rounded-lg">
+Copy
+</button>
+
+</div>
+
+</div>
+
+
+<div>
+
+<p class="text-gray-500 text-sm">
+Bank
+</p>
+
+<div class="flex justify-between items-center mt-2">
+
+<span id="bank">
+Bank of Ceylon
+</span>
+
+<button onclick="copy('bank')" class="text-sm bg-white text-black px-3 py-2 rounded-lg">
+Copy
+</button>
+
+</div>
+
+</div>
+
+
+<div>
+
+<p class="text-gray-500 text-sm">
+Account Number
+</p>
+
+<div class="flex justify-between items-center mt-2">
+
+<span id="account">
+XXXXXXXXXXXX
+</span>
+
+<button onclick="copy('account')" class="text-sm bg-white text-black px-3 py-2 rounded-lg">
+Copy
+</button>
+
+</div>
+
+</div>
+
+
+<div>
+
+<p class="text-gray-500 text-sm">
+SWIFT CODE
+</p>
+
+<div class="flex justify-between items-center mt-2">
+
+<span id="swift">
+BCEYLKLX
+</span>
+
+<button onclick="copy('swift')" class="text-sm bg-white text-black px-3 py-2 rounded-lg">
+Copy
+</button>
+
+</div>
+
+</div>
+
+
+<div>
+
+<p class="text-gray-500 text-sm">
+Branch
+</p>
+
+<div class="flex justify-between items-center mt-2">
+
+<span id="branch">
+Negombo Branch
+</span>
+
+<button onclick="copy('branch')" class="text-sm bg-white text-black px-3 py-2 rounded-lg">
+Copy
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- WISE -->
+
+<div class="glass rounded-3xl p-8 card">
+
+<div class="flex items-center justify-between">
+
+<div>
+
+<h2 class="text-3xl font-bold">
+🌍 Wise Transfer
+</h2>
+
+<p class="text-gray-400 mt-2">
+Fast International Payments
+</p>
+
+</div>
+
+<div class="text-5xl">
+💸
+</div>
+
+</div>
+
+
+<div class="mt-10">
+
+<div class="bg-black rounded-2xl p-8 border border-gray-700">
+
+<h3 class="text-xl font-bold">
+Pay using Wise
+</h3>
+
+<p class="text-gray-400 mt-4 leading-8">
+
+Transfer directly using your Wise account.
+
+Supports:
+
+</p>
+
+<div class="grid grid-cols-2 gap-3 mt-8">
+
+<div class="bg-zinc-900 rounded-xl p-4 text-center">
+
+🇺🇸 USD
+
+</div>
+
+<div class="bg-zinc-900 rounded-xl p-4 text-center">
+
+🇪🇺 EUR
+
+</div>
+
+<div class="bg-zinc-900 rounded-xl p-4 text-center">
+
+🇬🇧 GBP
+
+</div>
+
+<div class="bg-zinc-900 rounded-xl p-4 text-center">
+
+🇦🇺 AUD
+
+</div>
+
+<div class="bg-zinc-900 rounded-xl p-4 text-center">
+
+🇨🇦 CAD
+
+</div>
+
+<div class="bg-zinc-900 rounded-xl p-4 text-center">
+
+🇸🇬 SGD
+
+</div>
+
+</div>
+
+
+<button class="mt-10 w-full bg-white text-black py-4 rounded-xl font-bold">
+
+Pay with Wise
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+
+<!-- ================= QR SECTION ================= -->
+
+<section class="max-w-6xl mx-auto px-6 pb-24">
+
+<div class="glass rounded-3xl p-12">
+
+<div class="grid lg:grid-cols-2 gap-12 items-center">
+
+<div>
+
+<h2 class="text-4xl font-black">
+
+Scan & Pay
+
+</h2>
+
+<p class="text-gray-400 mt-5 leading-8">
+
+You can also scan the QR Code using your mobile banking application or Wise app.
+
+After payment upload your receipt below.
+
+</p>
+
+<div class="mt-10 space-y-4">
+
+<div class="flex items-center gap-4">
+
+<div class="w-3 h-3 rounded-full bg-green-500"></div>
+
+International Transfers
+
+</div>
+
+<div class="flex items-center gap-4">
+
+<div class="w-3 h-3 rounded-full bg-green-500"></div>
+
+Wise Supported
+
+</div>
+
+<div class="flex items-center gap-4">
+
+<div class="w-3 h-3 rounded-full bg-green-500"></div>
+
+Secure Payments
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="flex justify-center">
+
+<img
+
+id="qr"
+
+src="website/assets/paymentQR.png"
+
+class="rounded-3xl w-72 cursor-pointer transition duration-500 hover:scale-110 shadow-2xl"
+
+>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+
+<!-- ================= LIVE RATE ================= -->
+
+<section class="max-w-6xl mx-auto px-6 pb-24">
+
+<div class="glass rounded-3xl p-10">
+
+<div class="flex flex-col md:flex-row justify-between items-center">
+
+<div>
+
+<p class="uppercase tracking-[5px] text-gray-500">
+
+LIVE EXCHANGE RATE
+
+</p>
+
+<h2 class="text-4xl font-black mt-3">
+
+USD ⇄ LKR
+
+</h2>
+
+</div>
+
+<div class="text-right mt-8 md:mt-0">
+
+<h2
+
+id="rate"
+
+class="text-6xl font-black">
+
+Loading...
+
+</h2>
+
+<p class="text-gray-500 mt-3">
+
+Updated Automatically
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= PAYMENT SUBMISSION ================= -->
+
+<section class="max-w-7xl mx-auto px-6 pb-24">
+
+<div class="glass rounded-3xl p-10">
+
+<div class="text-center mb-12">
+
+<p class="uppercase tracking-[5px] text-gray-500">
+FINAL STEP
+</p>
+
+<h2 class="text-5xl font-black mt-3">
+Submit Your Payment
+</h2>
+
+<p class="text-gray-400 mt-5">
+Once you've completed your transfer, upload your receipt below.
+</p>
+
+</div>
+
+<form id="paymentForm" class="grid lg:grid-cols-2 gap-10">
+
+<!-- LEFT -->
+
+<div class="space-y-6">
+
+<div>
+
+<label class="text-gray-400 text-sm">
+Booking ID
+</label>
+
+<input
+id="bookingID"
+type="text"
+placeholder="Example: DDT-2026-1058"
+class="w-full mt-2 bg-black border border-zinc-700 rounded-xl p-4">
+
+</div>
+
+<div>
+
+<label class="text-gray-400 text-sm">
+Full Name
+</label>
+
+<input
+id="name"
+type="text"
+placeholder="John Smith"
+class="w-full mt-2 bg-black border border-zinc-700 rounded-xl p-4">
+
+</div>
+
+<div>
+
+<label class="text-gray-400 text-sm">
+Email
+</label>
+
+<input
+id="email"
+type="email"
+placeholder="john@email.com"
+class="w-full mt-2 bg-black border border-zinc-700 rounded-xl p-4">
+
+</div>
+
+<div>
+
+<label class="text-gray-400 text-sm">
+Payment Date
+</label>
+
+<input
+id="date"
+type="date"
+class="w-full mt-2 bg-black border border-zinc-700 rounded-xl p-4">
+
+</div>
+
+</div>
+
+<!-- RIGHT -->
+
+<div>
+
+<label class="text-gray-400 text-sm">
+
+Upload Receipt
+
+</label>
+
+<div
+
+id="drop"
+
+class="mt-3 border-2 border-dashed border-zinc-600 rounded-3xl p-10 text-center cursor-pointer hover:border-white transition">
+
+<div class="text-6xl">
+
+📤
+
+</div>
+
+<h3 class="text-2xl font-bold mt-5">
+
+Drop Receipt Here
+
+</h3>
+
+<p class="text-gray-400 mt-3">
+
+PNG • JPG • PDF
+
+</p>
+
+<input
+
+type="file"
+
+id="receipt"
+
+accept=".png,.jpg,.jpeg,.pdf"
+
+class="hidden"
+
+>
+
+</div>
+
+<div class="mt-8 hidden" id="previewBox">
+
+<img
+
+id="preview"
+
+class="rounded-2xl max-h-80 mx-auto shadow-xl"
+
+>
+
+<p id="fileName" class="mt-5 text-center text-gray-400"></p>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+</section>
+
+<!-- ================= PAYMENT SUMMARY ================= -->
+
+<section class="max-w-6xl mx-auto px-6 pb-24">
+
+<div class="glass rounded-3xl p-10">
+
+<h2 class="text-4xl font-black mb-10">
+
+Payment Summary
+
+</h2>
+
+<div class="grid md:grid-cols-2 gap-8">
+
+<div>
+
+<p class="text-gray-500">
+
+Tour
+
+</p>
+
+<h3 id="tourSummary" class="text-2xl font-bold">
+
+Waiting...
+
+</h3>
+
+</div>
+
+<div>
+
+<p class="text-gray-500">
+
+Payment Type
+
+</p>
+
+<h3 id="paymentSummary" class="text-2xl font-bold">
+
+Waiting...
+
+</h3>
+
+</div>
+
+<div>
+
+<p class="text-gray-500">
+
+Paid
+
+</p>
+
+<h3 id="paidSummary" class="text-2xl font-bold">
+
+$0
+
+</h3>
+
+</div>
+
+<div>
+
+<p class="text-gray-500">
+
+Remaining
+
+</p>
+
+<h3 id="remainingSummary" class="text-2xl font-bold text-green-400">
+
+$0
+
+</h3>
+
+</div>
+
+</div>
+
+<button
+
+id="submitBtn"
+
+class="mt-12 w-full bg-white text-black py-5 rounded-2xl text-xl font-bold hover:scale-[1.02] duration-300">
+
+Submit Payment
+
+</button>
+
+</div>
+
+</section>
+
+<!-- SUCCESS MODAL -->
+
+<div id="successModal"
+class="fixed inset-0 bg-black/80 backdrop-blur-md hidden flex items-center justify-center z-50">
+
+<div class="bg-zinc-900 rounded-3xl p-12 w-[95%] max-w-xl text-center border border-zinc-700 animate-[fade_.4s]">
+
+<div class="text-7xl mb-5">
+✅
+</div>
+
+<h2 class="text-4xl font-black mb-4">
+Payment Submitted!
+</h2>
+
+<p class="text-gray-400 mb-8">
+
+Thank you for your payment.
+
+We've received your proof of payment and our team will verify it shortly.
+
+</p>
+
+<div class="space-y-3 text-left bg-black rounded-2xl p-6">
+
+<div class="flex justify-between">
+
+<span class="text-gray-500">
+Booking ID
+</span>
+
+<span id="successBooking">
+-
+</span>
+
+</div>
+
+<div class="flex justify-between">
+
+<span class="text-gray-500">
+Tour
+</span>
+
+<span id="successTour">
+-
+</span>
+
+</div>
+
+<div class="flex justify-between">
+
+<span class="text-gray-500">
+Payment
+</span>
+
+<span id="successPaid">
+-
+</span>
+
+</div>
+
+<div class="flex justify-between">
+
+<span class="text-gray-500">
+Remaining
+</span>
+
+<span id="successRemain">
+-
+</span>
+
+</div>
+
+</div>
+
+<div class="grid md:grid-cols-2 gap-4 mt-8">
+
+<button
+onclick="window.print()"
+class="bg-white text-black rounded-xl py-4 font-bold">
+
+🖨 Print Receipt
+
+</button>
+
+<button
+onclick="downloadReceipt()"
+class="bg-emerald-500 rounded-xl py-4 font-bold">
+
+📄 Download Receipt
+
+</button>
+
+</div>
+
+<button
+
+onclick="location.reload()"
+
+class="mt-6 w-full border border-zinc-700 py-4 rounded-xl">
+
+Done
+
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+document.getElementById("lookupBtn").onclick=function(){
+
+document.getElementById("tourCard").classList.remove("hidden")
+
+window.scrollTo({
+
+top:650,
+
+behavior:"smooth"
+
+})
+
+}
+
+const deposit=document.getElementById("deposit")
+
+const full=document.getElementById("full")
+
+deposit.onclick=function(){
+
+deposit.classList.add("activeCard")
+
+full.classList.remove("activeCard")
+
+}
+
+full.onclick=function(){
+
+full.classList.add("activeCard")
+
+deposit.classList.remove("activeCard")
+
+}
+
+
+// Copy Buttons
+
+function copy(id){
+
+const text=document.getElementById(id).innerText;
+
+navigator.clipboard.writeText(text);
+
+alert("Copied: "+text);
+
+}
+
+
+
+// QR Zoom
+
+document.getElementById("qr").onclick=function(){
+
+this.classList.toggle("scale-150");
+
+}
+
+
+
+// Live Exchange Rate
+
+fetch("https://open.er-api.com/v6/latest/USD")
+
+.then(res=>res.json())
+
+.then(data=>{
+
+document.getElementById("rate").innerHTML=
+
+"1 USD = "+data.rates.LKR.toFixed(2)+" LKR";
+
+});
+
+// Drag & Drop
+
+const drop=document.getElementById("drop");
+const receipt=document.getElementById("receipt");
+
+drop.onclick=()=>receipt.click();
+
+drop.addEventListener("dragover",(e)=>{
+
+e.preventDefault();
+
+drop.classList.add("border-white");
+
+});
+
+drop.addEventListener("dragleave",()=>{
+
+drop.classList.remove("border-white");
+
+});
+
+drop.addEventListener("drop",(e)=>{
+
+e.preventDefault();
+
+receipt.files=e.dataTransfer.files;
+
+previewFile();
+
+});
+
+receipt.onchange=previewFile;
+
+function previewFile(){
+
+const file=receipt.files[0];
+
+if(!file)return;
+
+document.getElementById("previewBox").classList.remove("hidden");
+
+document.getElementById("fileName").innerHTML=file.name;
+
+if(file.type.includes("image")){
+
+const reader=new FileReader();
+
+reader.onload=e=>{
+
+document.getElementById("preview").src=e.target.result;
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+submitBtn.onclick=()=>{
+
+document.getElementById("successBooking").innerHTML=
+document.getElementById("bookingID").value;
+
+document.getElementById("successTour").innerHTML=
+tourName.value;
+
+document.getElementById("successPaid").innerHTML=
+paidSummary.innerHTML;
+
+document.getElementById("successRemain").innerHTML=
+remainingSummary.innerHTML;
+
+successModal.classList.remove("hidden");
+
+confetti();
+}
+
+function confetti(){
+
+window.confetti({
+
+particleCount:250,
+
+spread:140,
+
+origin:{y:0.6}
+
+});
+
+}
+}
+function downloadReceipt(){
+
+const receipt=`
+
+D & D TOURS
+
+-------------------------------------
+
+Booking ID :
+${bookingID.value}
+
+Tour :
+${tourName.value}
+
+Payment :
+${paidSummary.innerHTML}
+
+Remaining :
+${remainingSummary.innerHTML}
+
+Thank you for travelling with us.
+
+`;
+
+const blob=new Blob([receipt],{type:"text/plain"});
+
+const a=document.createElement("a");
+
+a.href=URL.createObjectURL(blob);
+
+a.download="Receipt.txt";
+
+a.click();
+
+}
+
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+</body>
+</html>

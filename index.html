@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>D&D Tours Payment</title>
+
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+
+</head>
+
+
+<body class="bg-white text-black min-h-screen">
+
+
+<div class="max-w-5xl mx-auto px-6 py-16">
+
+
+
+<!-- HEADER -->
+
+<div class="text-center mb-14">
+
+<p class="tracking-[5px] text-gray-400 uppercase">
+Secure Payment
+</p>
+
+
+<h1 class="text-6xl font-black mt-4">
+Complete Booking
+</h1>
+
+
+<p class="text-gray-500 mt-5">
+Pay securely with Wise or Bank Transfer
+</p>
+
+</div>
+
+
+
+
+
+
+<!-- START CHOICE -->
+
+
+<div id="startScreen">
+
+
+<div class="text-center mb-10">
+
+<h2 class="text-4xl font-black">
+Continue Payment
+</h2>
+
+<p class="text-gray-500 mt-3">
+Choose your option
+</p>
+
+</div>
+
+
+
+<div class="grid md:grid-cols-2 gap-8">
+
+
+
+<button
+
+onclick="existingBooking()"
+
+class="border rounded-3xl p-10 text-left shadow-xl hover:scale-105 transition"
+
+
+>
+
+
+<h2 class="text-3xl font-bold">
+I have Booking ID
+</h2>
+
+
+<p class="text-gray-500 mt-5">
+
+Already booked. Pay advance or remaining balance.
+
+</p>
+
+
+<div class="text-5xl mt-8">
+🔑
+</div>
+
+
+</button>
+
+
+
+
+
+
+
+<button
+
+onclick="newBooking()"
+
+class="border rounded-3xl p-10 text-left shadow-xl hover:scale-105 transition"
+
+
+>
+
+
+<h2 class="text-3xl font-bold">
+New Booking
+</h2>
+
+
+<p class="text-gray-500 mt-5">
+
+Create new booking and pay.
+
+</p>
+
+
+<div class="text-5xl mt-8">
+🚐
+</div>
+
+
+</button>
+
+
+</div>
+
+</div>
+
+
+
+
+
+
+
+<!-- EXISTING BOOKING -->
+
+
+
+<div
+
+id="existingBox"
+
+class="hidden mt-10 border rounded-3xl p-8 shadow-xl"
+
+
+>
+
+
+<h2 class="text-3xl font-bold">
+Find Booking
+</h2>
+
+
+
+<div class="mt-6 flex gap-4">
+
+
+<input
+
+id="bookingID"
+
+placeholder="DDT-2026-0001"
+
+class="w-full border p-4 rounded-xl"
+
+>
+
+
+<button
+
+onclick="findBooking()"
+
+class="bg-black text-white px-8 rounded-xl"
+
+>
+
+Find
+
+</button>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- BOOKING DETAILS -->
+
+
+
+<div
+
+id="bookingBox"
+
+class="hidden mt-10 border rounded-3xl p-8 shadow-xl"
+
+
+>
+
+
+<h2 class="text-3xl font-bold mb-8">
+Booking Details
+</h2>
+
+
+
+<div class="space-y-4 text-lg">
+
+
+<p>
+Guest:
+<b id="name"></b>
+</p>
+
+
+<p>
+Tour:
+<b id="tour"></b>
+</p>
+
+
+<p>
+Amount Due:
+<b id="amount"></b>
+</p>
+
+
+
+<p>
+Payment:
+<b id="paymentType">
+50% Advance
+</b>
+</p>
+
+
+</div>
+
+
+
+
+
+
+<!-- PAYMENT TYPE -->
+
+
+<div class="grid md:grid-cols-2 gap-5 mt-10">
+
+
+<button
+
+onclick="selectPayment('Advance')"
+
+class="border rounded-2xl p-6 hover:bg-black hover:text-white"
+
+>
+
+
+<h3 class="text-2xl font-bold">
+50% Advance
+</h3>
+
+<p>
+Secure booking
+</p>
+
+</button>
+
+
+
+
+<button
+
+onclick="selectPayment('Full')"
+
+class="border rounded-2xl p-6 hover:bg-black hover:text-white"
+
+>
+
+
+<h3 class="text-2xl font-bold">
+Full Payment
+</h3>
+
+<p>
+Pay everything
+</p>
+
+</button>
+
+
+</div>
+
+
+
+
+
+<!-- PAYMENT METHODS -->
+
+
+<!-- PAYMENT METHODS -->
+
+<div class="mt-10">
+
+<h3 class="text-3xl font-black">
+Choose Payment Method
+</h3>
+
+<p class="text-gray-500 mt-2">
+Select how you'd like to pay before uploading your receipt.
+</p>
+
+<div class="grid md:grid-cols-3 gap-6 mt-8">
+
+<!-- Wise -->
+
+<div
+id="wiseBtn"
+onclick="document.getElementById('wisePopup').classList.remove('hidden')"
+class="paymentCard cursor-pointer border-2 rounded-3xl p-8 transition duration-300 hover:shadow-2xl hover:-translate-y-2 hover:border-green-500">
+<div class="text-6xl">
+💸
+</div>
+
+<h2 class="text-2xl font-black mt-5">
+Wise
+</h2>
+
+<p class="text-gray-500 mt-3">
+International payments with low fees.
+</p>
+
+</div>
+
+
+<!-- Bank -->
+
+<div
+id="bankBtn"
+onclick="selectMethod('Bank')"
+class="paymentCard cursor-pointer border-2 rounded-3xl p-8 transition duration-300 hover:shadow-2xl hover:-translate-y-2 hover:border-blue-500">
+
+<div class="text-6xl">
+🏦
+</div>
+
+<h2 class="text-2xl font-black mt-5">
+Bank Transfer
+</h2>
+
+<p class="text-gray-500 mt-3">
+Local & International Bank Transfer
+</p>
+
+</div>
+
+
+<!-- Card -->
+
+<div
+class="opacity-50 border-2 rounded-3xl p-8 cursor-not-allowed">
+
+<div class="text-6xl">
+💳
+</div>
+
+<h2 class="text-2xl font-black mt-5">
+Card
+</h2>
+
+<p class="text-gray-500 mt-3">
+Coming Soon
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Wise Popup -->
+
+<div
+id="wisePopup"
+class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+
+<div class="bg-white rounded-[35px] p-10 w-[95%] max-w-xl shadow-2xl">
+
+<h2 class="text-4xl font-black">
+🌍 Pay with Wise
+</h2>
+
+<p class="text-gray-500 mt-3">
+Transfer your payment using Wise then return here and upload your receipt.
+</p>
+
+<div class="mt-8 border rounded-3xl p-6">
+
+<p class="text-gray-500">
+Wise Email
+</p>
+
+<div class="flex justify-between items-center mt-2">
+
+<b id="wiseEmail">
+voyolankataxiandtours@gmail.com
+</b>
+
+<button
+onclick="copyWiseEmail()"
+class="bg-black text-white px-5 py-3 rounded-xl">
+
+Copy
+
+</button>
+
+</div>
+
+</div>
+
+<div class="mt-6 rounded-3xl bg-green-50 border border-green-200 p-6">
+
+<h3 class="font-bold text-lg">
+How to Pay
+</h3>
+
+<div class="mt-5 space-y-4">
+
+<div class="flex gap-3 items-center">
+
+<div class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center">
+1
+</div>
+
+<p>Open the Wise App</p>
+
+</div>
+
+<div class="flex gap-3 items-center">
+
+<div class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center">
+2
+</div>
+
+<p>Send payment to the email above</p>
+
+</div>
+
+<div class="flex gap-3 items-center">
+
+<div class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center">
+3
+</div>
+
+<p>Return here after payment</p>
+
+</div>
+
+<div class="flex gap-3 items-center">
+
+<div class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center">
+4
+</div>
+
+<p>Upload your receipt</p>
+
+</div>
+
+<div class="flex gap-3 items-center">
+
+<div class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center">
+5
+</div>
+
+<p>Receive your booking reference instantly</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="flex gap-4 mt-8">
+
+<button
+onclick="window.open('https://wise.com/login','_blank')">
+
+Open Wise
+
+</button>
+
+<button
+onclick="closeWise()"
+class="flex-1 border py-4 rounded-2xl">
+
+Close
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Bank Popup -->
+
+<div
+id="bankPopup"
+class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+
+<div class="bg-white rounded-[35px] p-10 w-[95%] max-w-xl shadow-2xl">
+
+<h2 class="text-4xl font-black">
+🏦 Bank Transfer
+</h2>
+
+<div class="space-y-5 mt-8">
+
+<div>
+
+<p class="text-gray-500">
+Bank
+</p>
+
+<b>Sampath bank</b>
+
+</div>
+
+<div>
+
+<p class="text-gray-500">
+Account Name
+</p>
+
+<b>JLAD Eranga </b>
+
+</div>
+
+<div>
+
+<p class="text-gray-500">
+Account Number
+</p>
+
+<div class="flex justify-between">
+
+<b id="accountNumber">
+108454928773
+</b>
+
+<button
+onclick="copyAccount()"
+class="bg-black text-white px-4 rounded-lg">
+
+Copy
+
+</button>
+
+</div>
+
+</div>
+
+<div>
+
+<p class="text-gray-500">
+SWIFT
+</p>
+
+<b>BSAMLKLX</b>
+
+</div>
+
+</div>
+
+<div class="mt-8 rounded-3xl bg-yellow-50 border border-yellow-200 p-5">
+
+After transferring your payment, return here and upload your receipt.
+
+</div>
+
+<button
+onclick="closeBank()"
+class="mt-8 w-full border py-4 rounded-2xl">
+
+Close
+
+</button>
+
+</div>
+
+</div>
+
+
+
+
+
+<!-- RECEIPT -->
+
+
+<div class="mt-10">
+
+
+<h3 class="text-2xl font-bold">
+Upload Receipt
+</h3>
+
+
+<input
+
+id="receipt"
+
+type="file"
+
+accept="image/*,.pdf"
+
+class="mt-5 border p-4 rounded-xl w-full"
+
+>
+
+
+</div>
+
+
+
+
+
+<button
+
+onclick="submitPayment()"
+
+class="mt-10 w-full bg-black text-white py-5 rounded-2xl text-xl font-bold"
+
+>
+
+Confirm Payment
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- NEW BOOKING -->
+
+
+<div
+
+id="newBookingBox"
+
+class="hidden mt-10 border rounded-3xl p-8 shadow-xl"
+
+
+>
+
+
+<h2 class="text-3xl font-black">
+New Booking
+</h2>
+
+
+
+<div class="space-y-5 mt-8">
+
+
+<input
+id="newName"
+placeholder="Full Name"
+class="w-full border p-4 rounded-xl"
+>
+
+
+<input
+id="newEmail"
+placeholder="Email"
+class="w-full border p-4 rounded-xl"
+>
+
+
+
+<div class="space-y-5 mt-8">
+
+
+<select 
+id="tourSelect"
+class="w-full border p-4 rounded-xl">
+<option>
+Loading tours...
+</option>
+</select>
+
+
+
+<input
+id="peopleCount"
+type="number"
+placeholder="Number of People"
+class="w-full border p-4 rounded-xl"
+>
+
+
+
+<div id="peopleNames"></div>
+
+
+
+
+<input
+id="travelDate"
+type="date"
+class="w-full border p-4 rounded-xl"
+>
+
+
+
+
+<input
+id="pickupTime"
+type="time"
+class="w-full border p-4 rounded-xl"
+>
+
+
+
+
+<select
+id="pickupType"
+class="w-full border p-4 rounded-xl">
+
+
+<option>
+Normal Pickup
+</option>
+
+
+<option>
+Airport Pickup
+</option>
+
+
+<option>
+Airport Drop
+</option>
+
+
+</select>
+
+
+
+
+<div class="space-y-4">
+
+<label class="font-semibold text-lg">
+Pickup Location
+</label>
+
+<input
+id="pickupLocation"
+type="text"
+readonly
+placeholder="Select your pickup location using the map below..."
+class="w-full border p-4 rounded-xl bg-gray-50 cursor-not-allowed">
+
+<div class="flex flex-wrap gap-3">
+
+<button
+type="button"
+id="currentLocationBtn"
+class="border px-5 py-3 rounded-xl hover:bg-black hover:text-white transition">
+
+📍 Use Current Location
+
+</button>
+
+
+</div>
+
+<div
+id="map"
+class="w-full h-[550px] rounded-3xl border-2 border-gray-200 shadow-xl">
+</div>
+
+<div class="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+
+<div class="flex items-start gap-3">
+
+<div class="text-2xl">
+📍
+</div>
+
+<div>
+
+<h3 class="font-bold text-amber-900">
+Pickup Location Notice
+</h3>
+
+<p class="text-sm text-amber-800 mt-2 leading-6">
+
+Select your pickup location by clicking on the map or using
+<b>Current Location</b>.
+
+<br><br>
+
+GPS locations may occasionally vary depending on your device and signal.
+
+<br><br>
+
+Our booking team will contact you before your tour to confirm the exact pickup location, meeting point, and pickup time.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+
+
+<h2 class="text-3xl font-black">
+
+Total:
+<span id="newAmount">
+$0
+</span>
+
+</h2>
+
+
+</div>
+
+</div>
+
+
+
+
+<button
+
+class="mt-8 bg-black text-white w-full py-5 rounded-xl"
+
+onclick="createNewBooking()"
+
+>
+
+Continue Payment
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+<script
+
+type="module"
+
+src="./app.js">
+
+</script>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+
+function existingBooking(){
+
+document
+.getElementById("startScreen")
+.classList.add("hidden");
+
+
+document
+.getElementById("existingBox")
+.classList.remove("hidden");
+
+}
+
+
+
+function newBooking(){
+
+document
+.getElementById("startScreen")
+.classList.add("hidden");
+
+
+document
+.getElementById("newBookingBox")
+.classList.remove("hidden");
+
+}
+
+
+
+</script>
+
+<script>
+
+let map = null;
+let marker = null;
+
+// Create map only when New Booking opens
+function initMap(){
+
+    if(map) return;
+
+    map = L.map("map",{
+        zoomControl:true,
+        preferCanvas:true
+    }).setView([7.8731,80.7718],8);
+
+    const normalMap = L.tileLayer(
+    "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+    {
+        maxZoom:20,
+        attribution:"© OpenStreetMap © CARTO"
+    }).addTo(map);
+
+    const satelliteMap = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    {
+        attribution:"© Esri"
+    });
+
+    L.control.layers(
+    {
+        "🗺️ Road Map":normalMap,
+        "🛰️ Satellite":satelliteMap
+    }).addTo(map);
+
+    map.on("click",async function(e){
+
+        const lat=e.latlng.lat;
+        const lng=e.latlng.lng;
+
+        if(marker){
+            map.removeLayer(marker);
+        }
+
+        marker=L.marker([lat,lng]).addTo(map);
+        marker.bindPopup("📍 Your Pickup Location").openPopup();
+
+        map.flyTo([lat,lng],16);
+
+        try{
+
+            const res=await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
+            );
+
+            const data=await res.json();
+
+            document.getElementById("pickupLocation").value =
+            data.display_name;
+
+        }catch{
+
+            document.getElementById("pickupLocation").value =
+            lat.toFixed(6)+", "+lng.toFixed(6);
+
+        }
+
+    });
+
+    setTimeout(()=>{
+        map.invalidateSize();
+    },300);
+
+}
+
+// Current Location
+document.getElementById("currentLocationBtn").onclick=function(){
+
+    if(!map){
+        initMap();
+    }
+
+    this.innerHTML="📍 Finding Location...";
+
+    navigator.geolocation.getCurrentPosition(async function(pos){
+
+        const lat=pos.coords.latitude;
+        const lng=pos.coords.longitude;
+
+        map.setView([lat,lng],16);
+
+        if(marker){
+            map.removeLayer(marker);
+        }
+
+        marker=L.marker([lat,lng]).addTo(map);
+
+        try{
+
+            const res=await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
+            );
+
+            const data=await res.json();
+
+            document.getElementById("pickupLocation").value =
+            data.display_name;
+
+        }catch{
+
+            document.getElementById("pickupLocation").value =
+            lat.toFixed(6)+", "+lng.toFixed(6);
+
+        }
+
+        document.getElementById("currentLocationBtn").innerHTML =
+        "✅ Current Location Selected";
+
+    },function(){
+
+        alert("Unable to get your location.");
+
+        document.getElementById("currentLocationBtn").innerHTML =
+        "📍 Use Current Location";
+
+    });
+
+};
+
+function copyWiseEmail(){
+
+navigator.clipboard.writeText(
+document.getElementById("wiseEmail").innerText
+);
+
+alert("Wise email copied.");
+
+}
+
+function copyAccount(){
+
+navigator.clipboard.writeText(
+document.getElementById("accountNumber").innerText
+);
+
+alert("Account number copied.");
+
+}
+
+function closeWise(){
+
+document.getElementById("wisePopup")
+.classList.add("hidden");
+
+}
+
+function closeBank(){
+
+document.getElementById("bankPopup")
+.classList.add("hidden");
+
+}
+
+</script>
+</body>
+
+</html>
