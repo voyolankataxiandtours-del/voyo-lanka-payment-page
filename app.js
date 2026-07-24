@@ -11,7 +11,8 @@ doc,
 setDoc,
 query,
 orderBy,
-updateDoc
+updateDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // ================= CLOUDINARY =================
@@ -235,25 +236,30 @@ document.getElementById("bankPopup")
 
 window.findBooking = async function(){
 
-const id = document.getElementById("bookingID").value.trim();
+const id=document.getElementById("bookingID").value.trim();
 
-if(!id){
-alert("Enter Booking ID");
-return;
-}
+if(!id)
+return alert("Enter Booking ID");
 
 
 const snap = await getDoc(doc(db,"bookings",id));
 
 
-if(!snap.exists()){
-alert("Booking not found");
-return;
-}
+if(!snap.exists())
+return alert("Booking not found");
 
 
-bookingData = snap.data();
-bookingID = id;
+bookingData=snap.data();
+bookingID=id;
+
+
+
+let total = Number(bookingData.total || 0);
+
+let paid = Number(bookingData.paid || 0);
+
+let remain = total-paid;
+
 
 
 document.getElementById("name").innerText =
@@ -264,48 +270,130 @@ document.getElementById("tour").innerText =
 bookingData.tour;
 
 
-
-const total = Number(bookingData.total || 0);
-
-const paid = Number(bookingData.paid || 0);
-
-const balance = total - paid;
+document.getElementById("travelDateView").innerText =
+bookingData.travelDate || "-";
 
 
-
-document.getElementById("amount").innerText =
-"$" + balance.toFixed(2);
-
+document.getElementById("totalPrice").innerText =
+"$"+total.toFixed(2);
 
 
-if(balance <= 0){
+document.getElementById("paidAmount").innerText =
+"$"+paid.toFixed(2);
 
-document.getElementById("paymentOptions")
-?.classList.add("hidden");
 
-document.getElementById("paymentType")
-.innerText="Fully Paid";
+
+document.getElementById("remainingAmount").innerText =
+"$"+remain.toFixed(2);
+
+
+
+document.getElementById("paymentStatusView").innerText =
+bookingData.paymentStatus || "Pending";
+
+
+
+// PAYMENT LOGIC
+
+
+const options=document.getElementById("paymentOptions");
+
+
+// FULLY PAID
+
+if(remain<=0){
+
+options.innerHTML=`
+
+<div class="bg-green-100 text-green-800 p-6 rounded-2xl">
+
+<h2 class="text-2xl font-bold">
+✅ Fully Paid
+</h2>
+
+<p class="mt-2">
+Your booking has no remaining balance.
+</p>
+
+</div>
+
+`;
 
 }
-else if(paid > 0){
 
-document.getElementById("paymentType")
-.innerText="Balance Payment";
+
+// ADVANCE PAID
+
+else if(paid>0){
+
+
+options.innerHTML=`
+
+<button
+onclick="selectPayment('Remaining')"
+class="border rounded-2xl p-6">
+
+<h3 class="text-2xl font-bold">
+Pay Remaining Balance
+</h3>
+
+<p>
+Amount: $${remain.toFixed(2)}
+</p>
+
+</button>
+
+`;
+
+paymentChoice="Remaining";
+
 
 }
+
+
+// NOTHING PAID
+
 else{
 
-document.getElementById("paymentType")
-.innerText="Advance Payment";
+
+options.innerHTML=`
+
+<button
+onclick="selectPayment('Advance')"
+class="border rounded-2xl p-6">
+
+<h3 class="text-2xl font-bold">
+50% Advance
+</h3>
+
+</button>
+
+
+<button
+onclick="selectPayment('Full')"
+class="border rounded-2xl p-6">
+
+<h3 class="text-2xl font-bold">
+Full Payment
+</h3>
+
+</button>
+
+
+`;
 
 }
+
+
+document.getElementById("existingBox")
+.classList.add("hidden");
 
 
 document.getElementById("bookingBox")
 .classList.remove("hidden");
 
 
-};
+}
 
 // ================= PAYMENT TYPE =================
 
@@ -316,14 +404,55 @@ paymentChoice = type;
 document.getElementById("paymentType").innerText =
 type==="Advance"
 ?"50% Advance"
-:"Full Payment";
+:
+type==="Remaining"
+?"Remaining Balance"
+:
+"Full Payment";
 
 const total = bookingData.total || 0;
 
-const amount =
+window.selectPayment = function(type){
+
+paymentChoice = type;
+
+
+document.getElementById("paymentType").innerText =
 type==="Advance"
-? total/2
-: total;
+?"50% Advance"
+:
+type==="Remaining"
+?"Remaining Balance"
+:
+"Full Payment";
+
+
+let amount;
+
+
+if(type==="Advance"){
+
+amount = bookingData.total / 2;
+
+}
+
+else if(type==="Remaining"){
+
+amount = bookingData.total - bookingData.paid;
+
+}
+
+else{
+
+amount = bookingData.total;
+
+}
+
+
+document.getElementById("amount").innerHTML =
+"$"+amount.toFixed(2);
+
+};
 
 document.getElementById("amount").innerHTML=
 "$"+amount.toFixed(2);
@@ -493,12 +622,20 @@ const receiptURL = await uploadReceipt(file);
 
 // ================= CALCULATE AMOUNT =================
 
-const amount =
-paymentChoice === "Advance"
-? bookingData.total / 2
-: bookingData.total;
+let amount;
 
 
+if(paymentChoice==="Advance"){
+    amount = bookingData.total / 2;
+}
+
+else if(paymentChoice==="Remaining"){
+    amount = bookingData.total - bookingData.paid;
+}
+
+else{
+    amount = bookingData.total;
+}
 
 
 
@@ -596,6 +733,22 @@ window.setPickupLocation = function(lat, lng) {
 selectedLat = lat;
 selectedLng = lng;
 };
+
+
+window.backToStart = function(){
+
+document.getElementById("bookingBox")
+.classList.add("hidden");
+
+
+document.getElementById("existingBox")
+.classList.add("hidden");
+
+
+document.getElementById("startScreen")
+.classList.remove("hidden");
+
+}
 
 
 // ================= DONE MESSAGE =================
