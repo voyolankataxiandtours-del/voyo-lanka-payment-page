@@ -233,27 +233,79 @@ document.getElementById("bankPopup")
 
 // ================= FIND BOOKING =================
 
-window.findBooking = async function () {
+window.findBooking = async function(){
 
 const id = document.getElementById("bookingID").value.trim();
-if (!id) return alert("Enter ID");
 
-const snap = await getDoc(doc(db, "bookings", id));
+if(!id){
+alert("Enter Booking ID");
+return;
+}
 
-if (!snap.exists()) return alert("Not found");
+
+const snap = await getDoc(doc(db,"bookings",id));
+
+
+if(!snap.exists()){
+alert("Booking not found");
+return;
+}
+
 
 bookingData = snap.data();
 bookingID = id;
 
-document.getElementById("name").innerText = bookingData.name;
-document.getElementById("tour").innerText = bookingData.tour;
 
-const remain = (bookingData.total || 0) - (bookingData.paid || 0);
-document.getElementById("amount").innerText = "$" + remain;
+document.getElementById("name").innerText =
+bookingData.name;
 
-document.getElementById("bookingBox").classList.remove("hidden");
+
+document.getElementById("tour").innerText =
+bookingData.tour;
+
+
+
+const total = Number(bookingData.total || 0);
+
+const paid = Number(bookingData.paid || 0);
+
+const balance = total - paid;
+
+
+
+document.getElementById("amount").innerText =
+"$" + balance.toFixed(2);
+
+
+
+if(balance <= 0){
+
+document.getElementById("paymentOptions")
+?.classList.add("hidden");
+
+document.getElementById("paymentType")
+.innerText="Fully Paid";
+
+}
+else if(paid > 0){
+
+document.getElementById("paymentType")
+.innerText="Balance Payment";
+
+}
+else{
+
+document.getElementById("paymentType")
+.innerText="Advance Payment";
+
+}
+
+
+document.getElementById("bookingBox")
+.classList.remove("hidden");
+
+
 };
-
 
 // ================= PAYMENT TYPE =================
 
@@ -358,10 +410,11 @@ document.body.innerHTML = `
 
 <p>Send this reference number on WhatsApp for faster confirmation.</p>
 
-<a href="https://wa.me/?text=My%20Booking%20Reference%20is%20${reference}"
+<a 
+href="https://wa.me/94770787881?text=Hello%20Voyo%20Lanka,%20my%20booking%20reference%20is%20${reference}"
 target="_blank"
 style="display:inline-block;margin-top:20px;padding:10px 20px;background:black;color:white;border-radius:10px;">
-Send on WhatsApp
+📲 Send on WhatsApp
 </a>
 
 <br><br>
@@ -510,10 +563,9 @@ ${reference}
 
 
 <a 
-href="https://wa.me/?text=Hello%20D%26D%20Tours%2C%20my%20booking%20reference%20is%20${reference}"
+href="https://wa.me/94770787881?text=Hello%20Voyo%20Lanka,%20my%20booking%20reference%20is%20${reference}"
 target="_blank"
-style="display:inline-block;margin-top:20px;padding:12px 20px;background:black;color:white;border-radius:10px;"
->
+style="display:inline-block;margin-top:20px;padding:10px 20px;background:black;color:white;border-radius:10px;">
 📲 Send on WhatsApp
 </a>
 
