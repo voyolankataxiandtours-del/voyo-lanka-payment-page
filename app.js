@@ -403,25 +403,43 @@ createdAt: serverTimestamp()
 // ================= SUCCESS UI =================
 
 document.body.innerHTML = `
-<div style="text-align:center;padding:50px;font-family:sans-serif;">
-<h1>✅ Payment Successful</h1>
-<h2>Your Reference Number</h2>
-<h1 style="font-size:30px;color:green;">${reference}</h1>
+<div style="font-family:sans-serif;text-align:center;padding:40px;max-width:700px;margin:auto;">
 
-<p>Send this reference number on WhatsApp for faster confirmation.</p>
+<h1>🎉 Booking Confirmed</h1>
 
-<a 
+<p>Your Reference Number:</p>
+
+<h2 style="color:green;font-size:28px;">
+${reference}
+</h2>
+
+<p style="margin-top:20px;">
+⚠️ Please send this reference number to our WhatsApp for faster confirmation.
+</p>
+
+<a
 href="https://wa.me/94770787881?text=Hello%20Voyo%20Lanka,%20my%20booking%20reference%20is%20${reference}"
 target="_blank"
-style="display:inline-block;margin-top:20px;padding:10px 20px;background:black;color:white;border-radius:10px;">
+style="display:inline-block;margin-top:20px;padding:12px 24px;background:black;color:white;border-radius:10px;text-decoration:none;">
 📲 Send on WhatsApp
 </a>
 
 <br><br>
 
-<button onclick="navigator.clipboard.writeText('${reference}')">
-Copy Reference
+<button
+onclick="navigator.clipboard.writeText('${reference}')"
+style="padding:10px 18px;border:1px solid #000;border-radius:8px;background:white;cursor:pointer;">
+📋 Copy Reference
 </button>
+
+<br><br>
+
+<button
+onclick="window.location.reload()"
+style="padding:12px 24px;border:none;background:#f3f4f6;border-radius:10px;cursor:pointer;font-weight:bold;">
+← Back to Payment Page
+</button>
+
 </div>
 `;
 };
