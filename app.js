@@ -35,7 +35,7 @@ let selectedLng = null;
 function generateReference() {
 const year = new Date().getFullYear();
 const rand = Math.floor(100000 + Math.random() * 900000);
-return DDT-${year}-${rand};
+return `DDT-${year}-${rand}`;
 }
 
 
@@ -114,7 +114,7 @@ container.innerHTML = "";
 
 for (let i = 0; i < count; i++) {
 const input = document.createElement("input");
-input.placeholder = Passenger ${i + 1} Name;
+input.placeholder = `Passenger ${i + 1} Name`;
 input.className = "w-full border p-3 rounded-xl mt-2";
 
 input.oninput = () => {
@@ -341,7 +341,7 @@ form.append("file", file);
 form.append("upload_preset", uploadPreset);
 
 const res = await fetch(
-https://api.cloudinary.com/v1_1/${cloudName}/upload,
+`https://api.cloudinary.com/v1_1/${cloudName}/upload`,
 { method: "POST", body: form }
 );
 
