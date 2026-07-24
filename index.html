@@ -957,6 +957,9 @@ function initMap(){
         const lat=e.latlng.lat;
         const lng=e.latlng.lng;
 
+        selectedLat = lat;
+        selectedLng = lng;
+
         if(marker){
             map.removeLayer(marker);
         }
@@ -1005,6 +1008,9 @@ document.getElementById("currentLocationBtn").onclick=function(){
 
         const lat=pos.coords.latitude;
         const lng=pos.coords.longitude;
+
+        selectedLat = lat;
+        selectedLng = lng;
 
         map.setView([lat,lng],16);
 
