@@ -11,7 +11,8 @@ doc,
 setDoc,
 query,
 orderBy,
-updateDoc
+updateDoc,
+serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // ================= CLOUDINARY =================
@@ -298,80 +299,7 @@ return data.secure_url;
 }
 
 
-// ================= FINAL PAYMENT + SAVE =================
 
-window.submitPayment = async function () {
-
-if (!bookingData) return alert("No booking");
-
-const file = document.getElementById("receipt").files[0];
-if (!file) return alert("Upload receipt");
-
-const reference = generateReference(); // 🔥 UNIQUE ID HERE
-
-const receiptURL = await uploadReceipt(file);
-
-const amount =
-paymentChoice === "Advance"
-? bookingData.total / 2
-: bookingData.total;
-
-
-// ================= SAVE BOOKING =================
-
-await setDoc(doc(db, "bookings", reference), {
-...bookingData,
-bookingID: reference,
-paid: amount,
-status: "Booked",
-paymentStatus: "Pending",
-createdAt: serverTimestamp(),
-latitude: selectedLat,
-longitude: selectedLng
-});
-
-
-// ================= SAVE PAYMENT =================
-
-await setDoc(doc(db, "payments", reference), {
-bookingID: reference,
-name: bookingData.name,
-email: bookingData.email,
-phone: bookingData.phone,
-tour: bookingData.tour,
-amount,
-paymentType: paymentChoice,
-method: "Uploaded Receipt",
-receiptURL,
-status: "Pending",
-createdAt: serverTimestamp()
-});
-
-
-// ================= SUCCESS UI =================
-
-document.body.innerHTML = `
-<div style="text-align:center;padding:50px;font-family:sans-serif;">
-<h1>✅ Payment Successful</h1>
-<h2>Your Reference Number</h2>
-<h1 style="font-size:30px;color:green;">${reference}</h1>
-
-<p>Send this reference number on WhatsApp for faster confirmation.</p>
-
-<a href="https://wa.me/?text=My%20Booking%20Reference%20is%20${reference}"
-target="_blank"
-style="display:inline-block;margin-top:20px;padding:10px 20px;background:black;color:white;border-radius:10px;">
-Send on WhatsApp
-</a>
-
-<br><br>
-
-<button onclick="navigator.clipboard.writeText('${reference}')">
-Copy Reference
-</button>
-</div>
-`;
-};
 
   
 // ================= MAP VALUES (from your script) =================
@@ -446,6 +374,36 @@ paymentChoice === "Advance"
 : bookingData.total;
 
 
+  await setDoc(doc(db, "bookings", reference), {
+
+bookingID: reference,
+
+name: bookingData.name,
+email: bookingData.email,
+phone: bookingData.phone,
+
+tour: bookingData.tour,
+
+travelDate: bookingData.travelDate,
+pickupTime: bookingData.pickupTime,
+pickupType: bookingData.pickupType,
+
+pickupLocation: bookingData.pickupLocation,
+
+latitude: selectedLat,
+longitude: selectedLng,
+
+peopleNames: bookingData.peopleNames || [],
+
+total: bookingData.total,
+paid: amount,
+
+paymentStatus: "Pending",
+status: "Booked",
+
+createdAt: serverTimestamp()
+
+});
 
 
 
@@ -482,7 +440,7 @@ receiptURL: receiptURL,
 
 status: "Pending Approval",
 
-createdAt: new Date()
+createdAt: serverTimestamp()
 
 });
 
