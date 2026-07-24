@@ -11,8 +11,7 @@ doc,
 setDoc,
 query,
 orderBy,
-updateDoc,
-  serverTimestamp
+updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // ================= CLOUDINARY =================
@@ -36,7 +35,7 @@ let selectedLng = null;
 function generateReference() {
 const year = new Date().getFullYear();
 const rand = Math.floor(100000 + Math.random() * 900000);
-return `DDT-${year}-${rand}`;
+return DDT-${year}-${rand};
 }
 
 
@@ -115,7 +114,7 @@ container.innerHTML = "";
 
 for (let i = 0; i < count; i++) {
 const input = document.createElement("input");
-input.placeholder = `Passenger ${i + 1} Name`;
+input.placeholder = Passenger ${i + 1} Name;
 input.className = "w-full border p-3 rounded-xl mt-2";
 
 input.oninput = () => {
@@ -236,30 +235,25 @@ document.getElementById("bankPopup")
 
 window.findBooking = async function(){
 
-const id=document.getElementById("bookingID").value.trim();
+const id = document.getElementById("bookingID").value.trim();
 
-if(!id)
-return alert("Enter Booking ID");
+if(!id){
+alert("Enter Booking ID");
+return;
+}
 
 
 const snap = await getDoc(doc(db,"bookings",id));
 
 
-if(!snap.exists())
-return alert("Booking not found");
+if(!snap.exists()){
+alert("Booking not found");
+return;
+}
 
 
-bookingData=snap.data();
-bookingID=id;
-
-
-
-let total = Number(bookingData.total || 0);
-
-let paid = Number(bookingData.paid || 0);
-
-let remain = total-paid;
-
+bookingData = snap.data();
+bookingID = id;
 
 
 document.getElementById("name").innerText =
@@ -270,130 +264,48 @@ document.getElementById("tour").innerText =
 bookingData.tour;
 
 
-document.getElementById("travelDateView").innerText =
-bookingData.travelDate || "-";
 
+const total = Number(bookingData.total || 0);
 
-document.getElementById("totalPrice").innerText =
-"$"+total.toFixed(2);
+const paid = Number(bookingData.paid || 0);
 
-
-document.getElementById("paidAmount").innerText =
-"$"+paid.toFixed(2);
+const balance = total - paid;
 
 
 
-document.getElementById("remainingAmount").innerText =
-"$"+remain.toFixed(2);
+document.getElementById("amount").innerText =
+"$" + balance.toFixed(2);
 
 
 
-document.getElementById("paymentStatusView").innerText =
-bookingData.paymentStatus || "Pending";
+if(balance <= 0){
 
+document.getElementById("paymentOptions")
+?.classList.add("hidden");
 
-
-// PAYMENT LOGIC
-
-
-const options=document.getElementById("paymentOptions");
-
-
-// FULLY PAID
-
-if(remain<=0){
-
-options.innerHTML=`
-
-<div class="bg-green-100 text-green-800 p-6 rounded-2xl">
-
-<h2 class="text-2xl font-bold">
-✅ Fully Paid
-</h2>
-
-<p class="mt-2">
-Your booking has no remaining balance.
-</p>
-
-</div>
-
-`;
+document.getElementById("paymentType")
+.innerText="Fully Paid";
 
 }
+else if(paid > 0){
 
-
-// ADVANCE PAID
-
-else if(paid>0){
-
-
-options.innerHTML=`
-
-<button
-onclick="selectPayment('Remaining')"
-class="border rounded-2xl p-6">
-
-<h3 class="text-2xl font-bold">
-Pay Remaining Balance
-</h3>
-
-<p>
-Amount: $${remain.toFixed(2)}
-</p>
-
-</button>
-
-`;
-
-paymentChoice="Remaining";
-
+document.getElementById("paymentType")
+.innerText="Balance Payment";
 
 }
-
-
-// NOTHING PAID
-
 else{
 
-
-options.innerHTML=`
-
-<button
-onclick="selectPayment('Advance')"
-class="border rounded-2xl p-6">
-
-<h3 class="text-2xl font-bold">
-50% Advance
-</h3>
-
-</button>
-
-
-<button
-onclick="selectPayment('Full')"
-class="border rounded-2xl p-6">
-
-<h3 class="text-2xl font-bold">
-Full Payment
-</h3>
-
-</button>
-
-
-`;
+document.getElementById("paymentType")
+.innerText="Advance Payment";
 
 }
-
-
-document.getElementById("existingBox")
-.classList.add("hidden");
 
 
 document.getElementById("bookingBox")
 .classList.remove("hidden");
 
 
-}
+};
 
 // ================= PAYMENT TYPE =================
 
@@ -404,55 +316,14 @@ paymentChoice = type;
 document.getElementById("paymentType").innerText =
 type==="Advance"
 ?"50% Advance"
-:
-type==="Remaining"
-?"Remaining Balance"
-:
-"Full Payment";
+:"Full Payment";
 
 const total = bookingData.total || 0;
 
-window.selectPayment = function(type){
-
-paymentChoice = type;
-
-
-document.getElementById("paymentType").innerText =
+const amount =
 type==="Advance"
-?"50% Advance"
-:
-type==="Remaining"
-?"Remaining Balance"
-:
-"Full Payment";
-
-
-let amount;
-
-
-if(type==="Advance"){
-
-amount = bookingData.total / 2;
-
-}
-
-else if(type==="Remaining"){
-
-amount = bookingData.total - bookingData.paid;
-
-}
-
-else{
-
-amount = bookingData.total;
-
-}
-
-
-document.getElementById("amount").innerHTML =
-"$"+amount.toFixed(2);
-
-};
+? total/2
+: total;
 
 document.getElementById("amount").innerHTML=
 "$"+amount.toFixed(2);
@@ -470,7 +341,7 @@ form.append("file", file);
 form.append("upload_preset", uploadPreset);
 
 const res = await fetch(
-`https://api.cloudinary.com/v1_1/${cloudName}/upload`,
+https://api.cloudinary.com/v1_1/${cloudName}/upload,
 { method: "POST", body: form }
 );
 
@@ -622,20 +493,12 @@ const receiptURL = await uploadReceipt(file);
 
 // ================= CALCULATE AMOUNT =================
 
-let amount;
+const amount =
+paymentChoice === "Advance"
+? bookingData.total / 2
+: bookingData.total;
 
 
-if(paymentChoice==="Advance"){
-    amount = bookingData.total / 2;
-}
-
-else if(paymentChoice==="Remaining"){
-    amount = bookingData.total - bookingData.paid;
-}
-
-else{
-    amount = bookingData.total;
-}
 
 
 
@@ -733,22 +596,6 @@ window.setPickupLocation = function(lat, lng) {
 selectedLat = lat;
 selectedLng = lng;
 };
-
-
-window.backToStart = function(){
-
-document.getElementById("bookingBox")
-.classList.add("hidden");
-
-
-document.getElementById("existingBox")
-.classList.add("hidden");
-
-
-document.getElementById("startScreen")
-.classList.remove("hidden");
-
-}
 
 
 // ================= DONE MESSAGE =================
