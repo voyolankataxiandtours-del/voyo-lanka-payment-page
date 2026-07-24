@@ -211,17 +211,14 @@ Find
 
 
 
-<div id="bookingBox"
-class="hidden mt-10 border rounded-3xl p-8 shadow-xl">
+<div
+
+id="bookingBox"
+
+class="hidden mt-10 border rounded-3xl p-8 shadow-xl"
 
 
-<button
-onclick="backToStart()"
-class="mb-6 border px-5 py-3 rounded-xl hover:bg-black hover:text-white">
-
-← Back
-
-</button>
+>
 
 
 <h2 class="text-3xl font-bold mb-8">
@@ -229,86 +226,39 @@ Booking Details
 </h2>
 
 
+
 <div class="space-y-4 text-lg">
 
 
 <p>
-👤 Guest:
+Guest:
 <b id="name"></b>
 </p>
 
 
 <p>
-🧳 Tour:
+Tour:
 <b id="tour"></b>
 </p>
 
 
 <p>
-📅 Date:
-<b id="travelDateView"></b>
+Amount Due:
+<b id="amount"></b>
 </p>
+
 
 
 <p>
-💰 Total Price:
-<b id="totalPrice"></b>
-</p>
-
-
-<p>
-✅ Paid:
-<b id="paidAmount"></b>
-</p>
-
-
-<p>
-⚠️ Remaining:
-<b id="remainingAmount"></b>
-</p>
-
-
-<p>
-💳 Status:
-<b id="paymentStatusView"></b>
-</p>
-
-
-</div>
-
-
-
-<div id="paymentOptions"
-class="grid md:grid-cols-2 gap-5 mt-10">
-
-
-<button
-onclick="selectPayment('Advance')"
-class="border rounded-2xl p-6">
-
-<h3 class="text-2xl font-bold">
+Payment:
+<b id="paymentType">
 50% Advance
-</h3>
-
-</button>
-
-
-
-<button
-onclick="selectPayment('Full')"
-class="border rounded-2xl p-6">
-
-<h3 class="text-2xl font-bold">
-Full Payment
-</h3>
-
-</button>
+</b>
+</p>
 
 
 </div>
 
-
-</div>
 
 
 
@@ -1033,7 +983,7 @@ function initMap(){
         try{
 
             const res=await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
+            https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}
             );
 
             const data=await res.json();
@@ -1084,7 +1034,7 @@ document.getElementById("currentLocationBtn").onclick=function(){
         try{
 
             const res=await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
+            https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}
             );
 
             const data=await res.json();
