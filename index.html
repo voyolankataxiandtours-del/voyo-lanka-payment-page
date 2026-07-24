@@ -983,7 +983,7 @@ function initMap(){
         try{
 
             const res=await fetch(
-            https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
             );
 
             const data=await res.json();
@@ -1034,7 +1034,7 @@ document.getElementById("currentLocationBtn").onclick=function(){
         try{
 
             const res=await fetch(
-            https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
             );
 
             const data=await res.json();
